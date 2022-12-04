@@ -1,51 +1,34 @@
 # https://adventofcode.com/2022/day/3
 input = [l.strip() for l in open("src/day3/input.txt")]
 newList = []
-# split in half
-for item in input:
-    compartment1 = slice(len(item)//2)
-    compartment2 = slice(len(item)//2, len(item))
-    newList.append([item[compartment1], item[compartment2]])
+bothCompartments = 0
+badge = 0
+def isLowerOrNah(char):
+    return (ord(char) - ord("a") + 1 ) if char.islower() else (ord(char) - ord("A") + 27)
 
-# task1
-# logic
-sum = []
-bothCompartments = []
-found = False
-for item in newList:
+# task 1
+for item in input:
     found = False
-    for i in range(len(item[0])):
+    compartment1,compartment2 = item[:len(item)//2], item[len(item)//2: len(item)]
+    for char1 in compartment1:
         if(found):
             break
-        for j in range(len(item[1])):
-            if(item[0][i] == item[1][j]):
-                bothCompartments.append(item[0][i])
+        for char2 in compartment2:
+            if(char1 == char2):
+                bothCompartments += isLowerOrNah(char1)
                 found = True
                 break
-# sum
-result = 0
-for item in bothCompartments:
-    result += (ord(item)-96) if item.islower() else (ord(item)-38)
-print(result)
+                # print( isLowerOrNah(char2))
 
-# task2
-badge = []
-found = False
+# task 2
 for i in range(0, len(input), 3):
     found = False
-    for j in range(len(input[i])):
-        for k in range(len(input[i+1])):
-            if(found):
-                break
-            if(input[i][j]==input[i+1][k]):
-                for l in range(len(input[i+2])):
-                    if(input[i][j] == input[i+2][l]):
-                        badge.append(input[i+2][l])
-                        found = True
-                        break
+    elf1, elf2, elf3 = input[i],input[i+1],input[i+2]
+    for char in elf1:
+        if char in elf2 and char in elf3:
+            badge += isLowerOrNah(char)
+            break
 
-# sum
-result2 = 0
-for item in badge:
-    result2 += (ord(item)-96) if item.islower() else (ord(item)-38)
-print(result2)
+
+print(bothCompartments)
+print(badge)
